@@ -155,7 +155,7 @@ variable "max_bid_price" {
 variable "platform_fault_domain" {
   description = "The platform fault domain for the virtual machine."
   type        = string
-  default     = "-1"
+  default     = ""
 }
 
 variable "provision_vm_agent" {
