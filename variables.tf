@@ -247,8 +247,6 @@ variable "os_disk" {
   })
 }
 
-# NEW VARIABLES - Missing from your original
-
 variable "priority" {
   description = "The priority of this Virtual Machine. Possible values are Regular and Spot."
   type        = string
