@@ -157,7 +157,7 @@ module "linux_virtual_machine" {
     apt-get install -y nginx
     systemctl start nginx
     systemctl enable nginx
-    echo "<h1>Advanced Full VM Example</h1>" > /var/www/html/index.html
+    echo "<h1>Test example </h1>" > /var/www/html/index.html
   EOF
   )
 
