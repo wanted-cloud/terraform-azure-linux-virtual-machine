@@ -42,7 +42,6 @@ variable "admin_username" {
   description = "The name of the admin user."
   type        = string
   default     = ""
-
 }
 
 variable "license_type" {
@@ -156,7 +155,7 @@ variable "max_bid_price" {
 variable "platform_fault_domain" {
   description = "The platform fault domain for the virtual machine."
   type        = string
-  default     = "Regular"
+  default     = ""
 }
 
 variable "provision_vm_agent" {
@@ -193,7 +192,6 @@ variable "zones" {
   description = "The list of availability zones in which the virtual machine will be created."
   type        = list(string)
   default     = []
-
 }
 
 variable "vtpm_enabled" {
@@ -232,7 +230,7 @@ variable "user_data" {
 }
 
 variable "os_disk" {
-
+  description = "The OS disk configuration for the virtual machine."
   type = object({
     caching                          = string
     name                             = optional(string, "")
@@ -242,5 +240,113 @@ variable "os_disk" {
     secure_vm_disk_encryption_set_id = optional(string, "")
     security_encryption_type         = optional(string, "")
     write_accelerator_enabled        = optional(bool, false)
+    diff_disk_settings = optional(object({
+      option    = string
+      placement = optional(string, "CacheDisk")
+    }), null)
   })
+}
+
+variable "priority" {
+  description = "The priority of this Virtual Machine. Possible values are Regular and Spot."
+  type        = string
+  default     = "Regular"
+}
+
+variable "admin_ssh_key" {
+  description = "One or more admin_ssh_key blocks for SSH authentication."
+  type = list(object({
+    public_key = string
+    username   = string
+  }))
+  default = []
+}
+
+variable "boot_diagnostics" {
+  description = "Boot diagnostics configuration."
+  type = object({
+    storage_account_uri = optional(string, null)
+  })
+  default = null
+}
+
+variable "identity" {
+  description = "An identity block for managed identity configuration."
+  type = object({
+    type         = string
+    identity_ids = optional(list(string), [])
+  })
+  default = null
+}
+
+variable "additional_capabilities" {
+  description = "Additional capabilities configuration."
+  type = object({
+    ultra_ssd_enabled   = optional(bool, false)
+    hibernation_enabled = optional(bool, false)
+  })
+  default = null
+}
+
+variable "plan" {
+  description = "Plan block for marketplace images."
+  type = object({
+    name      = string
+    product   = string
+    publisher = string
+  })
+  default = null
+}
+
+variable "bypass_platform_safety_checks_on_user_schedule_enabled" {
+  description = "Whether to skip platform scheduled patching when a user schedule is associated with the VM."
+  type        = bool
+  default     = false
+}
+
+variable "capacity_reservation_group_id" {
+  description = "The ID of the Capacity Reservation Group which the Virtual Machine should be allocated to."
+  type        = string
+  default     = ""
+}
+
+variable "gallery_application" {
+  description = "One or more gallery_application blocks."
+  type = list(object({
+    version_id                                  = string
+    automatic_upgrade_enabled                   = optional(bool, false)
+    configuration_blob_uri                      = optional(string, "")
+    order                                       = optional(number, 0)
+    tag                                         = optional(string, "")
+    treat_failure_as_deployment_failure_enabled = optional(bool, false)
+  }))
+  default = []
+}
+
+variable "secret" {
+  description = "One or more secret blocks for Key Vault certificates."
+  type = list(object({
+    key_vault_id = string
+    certificate = list(object({
+      url = string
+    }))
+  }))
+  default = []
+}
+
+variable "termination_notification" {
+  description = "Termination notification configuration for spot instances."
+  type = object({
+    enabled = bool
+    timeout = optional(string, "PT5M")
+  })
+  default = null
+}
+
+variable "os_image_notification" {
+  description = "OS image notification configuration."
+  type = object({
+    timeout = optional(string, "PT15M")
+  })
+  default = null
 }
